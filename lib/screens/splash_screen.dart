@@ -1,10 +1,11 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, avoid_print, prefer_final_fields, unused_field
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
+import '../controller/api.dart';
 import '../main.dart';
 import 'auth/login_screen.dart';
 import 'home_screen.dart';
@@ -37,25 +38,25 @@ class _SplashScreenState extends State<SplashScreen> {
             alignment: Alignment.bottomCenter,
             child: const LoginScreen(),
           ));
-      // if (API.auth.currentUser != null) {
-      //   print('\nUser: ${API.auth.currentUser}');
+      if (API.auth.currentUser != null) {
+        print('\nUser: ${API.auth.currentUser}');
 
-      //   Navigator.pushReplacement(
-      //       context,
-      //       PageTransition(
-      //         type: PageTransitionType.size,
-      //         alignment: Alignment.bottomCenter,
-      //         child: HomeScreen(),
-      //       ));
-      // } else {
-      //   Navigator.pushReplacement(
-      //       context,
-      //       PageTransition(
-      //         type: PageTransitionType.size,
-      //         alignment: Alignment.bottomCenter,
-      //         child: LoginScreen(),
-      //       ));
-      // }
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+              type: PageTransitionType.size,
+              alignment: Alignment.bottomCenter,
+              child: const HomeScreen(),
+            ));
+      } else {
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+              type: PageTransitionType.size,
+              alignment: Alignment.bottomCenter,
+              child: const LoginScreen(),
+            ));
+      }
     });
   }
 

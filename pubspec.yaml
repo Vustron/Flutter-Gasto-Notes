@@ -34,6 +34,12 @@ dependencies:
   flutter_spinkit: ^5.2.0
   # for using curved bottom navbar
   curved_navigation_bar: ^1.0.3
+  # for using easy loading
+  flutter_easyloading: ^3.0.5
+  # for using network cache image
+  cached_network_image: ^3.3.0
+  # for picking images
+  image_picker: ^1.0.5
 
 dev_dependencies:
   flutter_test:

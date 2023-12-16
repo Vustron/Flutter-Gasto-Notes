@@ -23,6 +23,13 @@ class _HomeScreen extends State<HomeScreen> {
   // init user
   final User? user = FirebaseAuth.instance.currentUser;
 
+  @override
+  void initState() {
+    super.initState();
+    // get self info
+    API.getSelfInfo();
+  }
+
   // init navbar items
   final items = <Widget>[
     Icon(
@@ -46,15 +53,8 @@ class _HomeScreen extends State<HomeScreen> {
   final screens = [
     SearchScreen(),
     DashboardScreen(),
-    ProfileScreen(user: API.me),
+    ProfileScreen(),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    // get self info
-    API.getSelfInfo();
-  }
 
   @override
   Widget build(BuildContext context) {
