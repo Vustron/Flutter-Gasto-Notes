@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # for using cuptertino icons
   cupertino_icons: ^1.0.2
   # for using firebase core
   firebase_core: ^2.24.2
@@ -31,7 +32,7 @@ dependencies:
   google_sign_in: ^6.2.1
   # for using flutter loading kit
   flutter_spinkit: ^5.2.0
-  # for usign curved bottom navbar
+  # for using curved bottom navbar
   curved_navigation_bar: ^1.0.3
 
 dev_dependencies:

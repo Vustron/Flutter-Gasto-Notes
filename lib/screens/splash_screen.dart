@@ -1,9 +1,12 @@
+// ignore_for_file: unused_import
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
 import '../main.dart';
+import 'auth/login_screen.dart';
 import 'home_screen.dart';
 
 // Splash screen
@@ -32,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
           PageTransition(
             type: PageTransitionType.size,
             alignment: Alignment.bottomCenter,
-            child: const HomeScreen(),
+            child: const LoginScreen(),
           ));
       // if (API.auth.currentUser != null) {
       //   print('\nUser: ${API.auth.currentUser}');

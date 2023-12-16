@@ -30,6 +30,20 @@ class _DashboardScreen extends State<DashboardScreen> {
         ),
       ),
 
+      // Add user button
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: Colors.grey,
+          child: const Icon(
+            Icons.add_to_photos_sharp,
+            color: Colors.white,
+          ),
+        ),
+      ),
+
+      // body
       body: const Row(
         children: [
           Padding(

@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
+import '../controller/api.dart';
 import 'dashboard_screen.dart';
 import 'profile_screen.dart';
 import 'search_screen.dart';
@@ -19,6 +20,8 @@ class _HomeScreen extends State<HomeScreen> {
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
   // init key index
   int index = 1;
+  // init user
+  final User? user = FirebaseAuth.instance.currentUser;
 
   // init navbar items
   final items = <Widget>[
@@ -43,8 +46,15 @@ class _HomeScreen extends State<HomeScreen> {
   final screens = [
     SearchScreen(),
     DashboardScreen(),
-    ProfileScreen(),
+    ProfileScreen(user: API.me),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // get self info
+    API.getSelfInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
