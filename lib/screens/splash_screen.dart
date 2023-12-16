@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../main.dart';
+import 'home_screen.dart';
 
 // Splash screen
 class SplashScreen extends StatefulWidget {
@@ -27,6 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
         systemNavigationBarColor: Colors.black,
         statusBarColor: Colors.black,
       ));
+      Navigator.pushReplacement(
+          context,
+          PageTransition(
+            type: PageTransitionType.size,
+            alignment: Alignment.bottomCenter,
+            child: const HomeScreen(),
+          ));
       // if (API.auth.currentUser != null) {
       //   print('\nUser: ${API.auth.currentUser}');
 
@@ -82,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           fontSize: 50, fontWeight: FontWeight.w900),
                       colors: [
                         Colors.black,
-                        Colors.amber,
+                        Colors.grey,
                       ],
                     ),
                   ],
@@ -101,8 +108,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                const SpinKitThreeBounce(
-                  color: Colors.amber,
+                const SpinKitThreeInOut(
+                  color: Colors.grey,
                   size: 50.0,
                 ),
               ],
