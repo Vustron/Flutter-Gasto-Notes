@@ -1,4 +1,8 @@
+// ignore_for_file: avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
+import '../widgets/expense_card.dart';
+import '../widgets/income_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -26,9 +30,19 @@ class _DashboardScreen extends State<DashboardScreen> {
         ),
       ),
 
-      // body
-      body: const Center(
-        child: Text('Dashboard'),
+      body: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 9, vertical: 10),
+            child: Row(
+              children: [
+                IncomeCard(),
+                SizedBox(width: 5.0),
+                ExpenseCard(),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
