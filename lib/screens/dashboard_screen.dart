@@ -17,6 +17,7 @@ class _DashboardScreen extends State<DashboardScreen> {
     return Scaffold(
       // appbar
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey,
         elevation: 0,
         centerTitle: true,

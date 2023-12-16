@@ -42,8 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Stack(children: [
           // app logo
           AnimatedPositioned(
-              top: _isAnimate ? mq.height * .15 : -mq.width * .5,
-              right: mq.width * .25,
+              top: mq.height * .15,
+              right: _isAnimate ? mq.width * .25 : -mq.width * .5,
               width: mq.width * .5,
               duration: const Duration(seconds: 1),
               child: Image.asset('assets/images/icon.png')),
@@ -89,8 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // google login
           AnimatedPositioned(
-            bottom: _isAnimate ? mq.height * 0.2 : -mq.width * .5,
-            left: mq.width * 0.14,
+            bottom: mq.height * 0.2,
+            left: _isAnimate ? mq.width * 0.14 : -mq.width * .5,
             height: mq.height * 0.2,
             duration: const Duration(seconds: 1),
             child: Center(
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 255, 68, 68),
+                  backgroundColor: Colors.white70,
                   shape: const StadiumBorder(),
                   elevation: 1,
                 ),
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: RichText(
                   text: const TextSpan(
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black87,
                       fontSize: 19,
                     ),
                     children: [

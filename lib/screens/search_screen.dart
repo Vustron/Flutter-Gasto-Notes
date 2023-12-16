@@ -13,6 +13,7 @@ class _SearchScreen extends State<SearchScreen> {
     return Scaffold(
       // appbar
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey,
         elevation: 0,
         centerTitle: true,

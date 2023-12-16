@@ -21,10 +21,9 @@ class _ExpenseCardState extends State<ExpenseCard> {
           height: 100,
           child: const Center(
             child: ListTile(
-              leading: Icon(
-                Icons.money_off_rounded,
-                size: 30,
-                color: Colors.white,
+              leading: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/diagram_down.png'),
+                radius: 15, // Adjust the radius as needed
               ),
               title: Text(
                 'Expenses',
@@ -35,7 +34,7 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 ),
               ),
               subtitle: Text(
-                '50',
+                '₱50',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,

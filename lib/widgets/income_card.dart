@@ -21,10 +21,9 @@ class _IncomeCardState extends State<IncomeCard> {
           height: 100,
           child: const Center(
             child: ListTile(
-              leading: Icon(
-                Icons.attach_money_sharp,
-                size: 30,
-                color: Colors.white,
+              leading: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/diagram_up.png'),
+                radius: 15, // Adjust the radius as needed
               ),
               title: Text(
                 'Income',
@@ -34,7 +33,7 @@ class _IncomeCardState extends State<IncomeCard> {
                     fontSize: 14),
               ),
               subtitle: Text(
-                '200',
+                '₱200',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,

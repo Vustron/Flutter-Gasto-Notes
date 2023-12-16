@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gasto_notes/model/user.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import '../controller/api.dart';
@@ -32,6 +33,7 @@ class _ProfileScreen extends State<ProfileScreen> {
         child: Scaffold(
           // appbar
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.grey,
             elevation: 0,
             centerTitle: true,
@@ -161,7 +163,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 _showBottomSheet();
                               },
                               shape: const CircleBorder(),
-                              color: const Color.fromARGB(255, 68, 255, 196),
+                              color: Colors.grey,
                               child: const Icon(
                                 Icons.edit,
                                 color: Colors.white,
@@ -241,11 +243,22 @@ class _ProfileScreen extends State<ProfileScreen> {
                       // Update Button
                       ElevatedButton.icon(
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            await API.updateUserInfo();
-                            Dialogs.showSuccessSnackbar(
-                                context, 'Profile Updated Sucessfully');
+                          try {
+                            Dialogs.showProgressBar(context);
+
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              await API.updateUserInfo();
+
+                              Dialogs.showSuccessSnackbar(
+                                  context, 'Profile Updated Sucessfully');
+
+                              Navigator.pop(context);
+                            }
+                          } catch (error) {
+                            print('Error: $error');
+                            Dialogs.showErrorSnackbar(
+                                context, 'Something went wrong: $error');
                           }
                         },
                         icon: const Icon(
@@ -262,8 +275,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                         ),
                         style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder(),
-                          backgroundColor:
-                              const Color.fromARGB(255, 68, 255, 196),
+                          backgroundColor: Colors.grey,
                           minimumSize: Size(mq.width * .5, mq.height * .06),
                         ),
                       ),
@@ -280,6 +292,7 @@ class _ProfileScreen extends State<ProfileScreen> {
 
   void _showBottomSheet() {
     showModalBottomSheet(
+        backgroundColor: Colors.grey,
         context: context,
         builder: (_) {
           return ListView(
@@ -291,7 +304,11 @@ class _ProfileScreen extends State<ProfileScreen> {
               const Text(
                 'Pick Profile Picture',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
               ),
               // for adding some space
               SizedBox(height: mq.height * .04),
@@ -303,7 +320,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      fixedSize: Size(mq.width * .3, mq.height * .15),
+                      fixedSize: Size(mq.width * .3, mq.height * .14),
                     ),
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
@@ -329,7 +346,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      fixedSize: Size(mq.width * .3, mq.height * .15),
+                      fixedSize: Size(mq.width * .3, mq.height * .14),
                     ),
                     onPressed: () async {
                       final ImagePicker picker = ImagePicker();
