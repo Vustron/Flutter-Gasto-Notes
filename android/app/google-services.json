@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "517153295221",
+    "project_id": "flutter-gasto-notes",
+    "storage_bucket": "flutter-gasto-notes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517153295221:android:5db516e4c339d10198e13c",
+        "android_client_info": {
+          "package_name": "com.vustron.gasto_notes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjEF64iT8U13yP-zufrahwFd4TAJpkJQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
