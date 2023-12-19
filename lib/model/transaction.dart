@@ -10,7 +10,7 @@ class Transactions {
   });
   late final String userId;
   late final String title;
-  late final int amount;
+  late final double amount;
   late final String transactionDate;
   late final String category;
   late final String type;
@@ -18,7 +18,7 @@ class Transactions {
   Transactions.fromJson(Map<String, dynamic> json) {
     userId = json['userId'].toString();
     title = json['title'].toString();
-    amount = int.tryParse(json['amount'].toString())!;
+    amount = double.tryParse(json['amount'].toString())!;
     transactionDate = json['transactionDate'].toString();
     category = json['category'].toString();
     type = json['type'].toString();

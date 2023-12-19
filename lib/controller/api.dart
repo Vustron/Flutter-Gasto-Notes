@@ -57,9 +57,9 @@ class API {
         about: "Hey I'm using Gasto-Notes!",
         image: user.photoURL.toString(),
         createdAt: time,
-        income: 0,
-        expenses: 0,
-        balance: 0);
+        income: 0.00,
+        expenses: 0.00,
+        balance: 0.00);
 
     return await firestore
         .collection('users')
@@ -130,8 +130,13 @@ class API {
   }
 
   // for adding transactions
-  static Future<void> addingTransaction(UserData appUser, String title,
-      int amount, String transactionDate, String category, String type) async {
+  static Future<void> addingTransaction(
+      UserData appUser,
+      String title,
+      double amount,
+      String transactionDate,
+      String category,
+      String type) async {
     // transaction sending time(also used as id)
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     // transaction to send

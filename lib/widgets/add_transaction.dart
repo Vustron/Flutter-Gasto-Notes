@@ -6,6 +6,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 
 import '../controller/api.dart';
+import 'dialogs.dart';
 
 class AddTransaction extends StatefulWidget {
   const AddTransaction({super.key});
@@ -15,12 +16,22 @@ class AddTransaction extends StatefulWidget {
 }
 
 class _AddTransactionState extends State<AddTransaction> {
+  // init form key
+  final _formKey = GlobalKey<FormState>();
+  // init title controller
+  final titleController = TextEditingController();
+  // init amount controller
+  final amountController = TextEditingController();
   // init date controller
   final dateController = TextEditingController();
+  // init type controller
+  final typeController = TextEditingController();
+  // category controller
+  final categoryController = TextEditingController();
   // init title
   String title = '';
   // init amount
-  int? amount = 0;
+  double? amount = 0.00;
   // init date picker
   DateTime? pickedDate;
   // type
@@ -31,95 +42,25 @@ class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
     final options = ['Expense', 'Income'];
-    return Column(
-      children: [
-        // title
-        TextFormField(
-          maxLines: null,
-          onChanged: (value) => title = value,
-          style: const TextStyle(color: Colors.black),
-          decoration: InputDecoration(
-            hintText: 'Title',
-            hintStyle: const TextStyle(color: Colors.black),
-            prefixIcon: const Icon(
-              BoxIcons.bx_comment_add,
-              color: Colors.black,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Colors.black),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Colors.black),
-            ),
-          ),
-        ),
-
-        // space
-        const SizedBox(height: 20),
-
-        // amount
-        TextFormField(
-          maxLines: null,
-          onChanged: (value) {
-            amount = int.tryParse(value);
-          },
-          style: const TextStyle(color: Colors.black),
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          ],
-          decoration: InputDecoration(
-            hintText: 'Amount',
-            hintStyle: const TextStyle(color: Colors.black),
-            prefixIcon: const Icon(
-              Bootstrap.cash_stack,
-              color: Colors.black,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Colors.black),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: Colors.black),
-            ),
-          ),
-        ),
-
-        // space
-        const SizedBox(height: 18),
-
-        // date
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextField(
-            onTap: () async {
-              // user can pick date
-              pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-
-              if (pickedDate != null) {
-                String formattedDate =
-                    DateFormat('MM/dd/yyyy').format(pickedDate!);
-                dateController.text = formattedDate;
-                setState(() {});
-              }
-            },
-            controller: dateController,
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          // title
+          TextFormField(
+            maxLines: null,
+            controller: titleController,
+            onChanged: (value) => title = value,
+            validator: (value) => value!.isEmpty ? "Enter a title" : null,
+            style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
-              labelText: "Date",
-              hintStyle: const TextStyle(
-                color: Colors.white,
+              labelText: 'Title',
+              hintText: 'e.g. Pamasahe',
+              hintStyle: const TextStyle(color: Colors.black38),
+              prefixIcon: const Icon(
+                BoxIcons.bx_comment_add,
+                color: Colors.black,
               ),
-              filled: true,
-              prefixIcon: const Icon(Icons.calendar_today),
-              prefixIconColor: Colors.black,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: const BorderSide(color: Colors.black),
@@ -129,126 +70,232 @@ class _AddTransactionState extends State<AddTransaction> {
                 borderSide: const BorderSide(color: Colors.black),
               ),
             ),
-            readOnly: true,
           ),
-        ),
 
-        DropdownButton<String>(
-          // Step 3.
-          value: dropdownValue,
-          // Step 4.
-          items: <String>['Utilities', 'Transportation', 'Food', 'Others']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: const TextStyle(fontSize: 15.4),
+          // space
+          const SizedBox(height: 20),
+
+          // amount
+          TextFormField(
+            maxLines: null,
+            controller: amountController,
+            onChanged: (value) {
+              amount = double.tryParse(value) ?? 0.0;
+            },
+            validator: (value) => value!.isEmpty ? "Enter an amount" : null,
+            style: const TextStyle(color: Colors.black),
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+              signed: false,
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+              TextInputFormatter.withFunction((oldValue, newValue) {
+                final text = newValue.text;
+                return text.isEmpty
+                    ? newValue
+                    : double.tryParse(text) == null
+                        ? oldValue
+                        : newValue;
+              }),
+            ],
+            decoration: InputDecoration(
+              labelText: 'Title',
+              hintText: 'Amount e.g. ₱ 20.00',
+              hintStyle: const TextStyle(color: Colors.black38),
+              prefixIcon: const Icon(
+                Bootstrap.cash_stack,
+                color: Colors.black,
               ),
-            );
-          }).toList(),
-          // Step 5.
-          onChanged: (String? newValue) {
-            setState(() {
-              dropdownValue = newValue!;
-            });
-          },
-        ),
-
-        // category
-        Row(
-          children: [
-            RadioMenuButton<String>(
-              value: options[0],
-              groupValue: currentOption,
-              onChanged: (expense) {
-                setState(() {
-                  currentOption = expense!;
-                });
-              },
-              child: const Padding(
-                padding: EdgeInsets.only(left: 0),
-                child: Text(
-                  "Expense",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15.4,
-                  ),
-                ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
               ),
             ),
-            RadioMenuButton<String>(
-              style: ButtonStyle(
-                iconSize: MaterialStateProperty.all(20),
-              ),
-              value: options[1],
-              groupValue: currentOption,
-              onChanged: (income) {
-                setState(() {
-                  currentOption = income!;
-                });
+          ),
+
+          // space
+          const SizedBox(height: 18),
+
+          // date
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextField(
+              onTap: () async {
+                // user can pick date
+                pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2100),
+                );
+
+                if (pickedDate != null) {
+                  String formattedDate =
+                      DateFormat('MM/dd/yyyy').format(pickedDate!);
+                  dateController.text = formattedDate;
+                  setState(() {});
+                }
               },
-              child: const Padding(
-                padding: EdgeInsets.only(left: 0),
-                child: Text(
-                  "Income",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15.4,
-                  ),
+              controller: dateController,
+              decoration: InputDecoration(
+                labelText: "Date",
+                hintStyle: const TextStyle(
+                  color: Colors.white,
+                ),
+                filled: true,
+                prefixIcon: const Icon(Icons.calendar_today),
+                prefixIconColor: Colors.black,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
+              readOnly: true,
             ),
-          ],
-        ),
+          ),
 
-        // actions
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Row(
-              children: [
-                MaterialButton(
-                  onPressed: () async {
-                    print(
-                        '$title, $amount, $pickedDate, $dropdownValue,$currentOption');
-                    String formattedDate =
-                        DateFormat('MM/dd/yyyy').format(pickedDate!);
-                    await API.addingTransaction(API.me, title, amount!,
-                        formattedDate, dropdownValue, currentOption);
-                    // hide alert dialog
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Add',
+          DropdownButton<String>(
+            // Step 3.
+            value: dropdownValue,
+            // Step 4.
+            items: <String>[
+              'Utilities',
+              'Transportation',
+              'Food',
+              'Others',
+              'Housing',
+              'Taxes',
+              'Repairs',
+              'Healthcare',
+              'Insurance',
+              'Supplies',
+              'Personal',
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: const TextStyle(fontSize: 15.4),
+                ),
+              );
+            }).toList(),
+            // Step 5.
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            },
+          ),
+
+          // category
+          Row(
+            children: [
+              RadioMenuButton<String>(
+                value: options[0],
+                groupValue: currentOption,
+                onChanged: (expense) {
+                  setState(() {
+                    currentOption = expense!;
+                  });
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 0),
+                  child: Text(
+                    "Expense",
                     style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15.4,
                     ),
                   ),
                 ),
-                MaterialButton(
-                  onPressed: () async {
-                    // _dialogController.reverse();
-
-                    // hide alert dialog
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Cancel',
+              ),
+              RadioMenuButton<String>(
+                style: ButtonStyle(
+                  iconSize: MaterialStateProperty.all(20),
+                ),
+                value: options[1],
+                groupValue: currentOption,
+                onChanged: (income) {
+                  setState(() {
+                    currentOption = income!;
+                  });
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 0),
+                  child: Text(
+                    "Income",
                     style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15.4,
                     ),
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+
+          // actions
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Row(
+                children: [
+                  MaterialButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        String formattedDate =
+                            DateFormat('MM/dd/yyyy').format(pickedDate!);
+                        await API.addingTransaction(
+                          API.me,
+                          title,
+                          amount!,
+                          formattedDate,
+                          dropdownValue,
+                          currentOption,
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text(
+                      'Add',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: () async {
+                      // _dialogController.reverse();
+
+                      // hide alert dialog
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

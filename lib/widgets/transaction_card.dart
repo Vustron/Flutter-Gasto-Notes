@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
-
 import '../main.dart';
 import '../model/transaction.dart';
+import '../utils/icons_util.dart';
 
 class TransactionCard extends StatefulWidget {
   final Transactions transaction;
@@ -17,18 +17,16 @@ class TransactionCard extends StatefulWidget {
 class _TransactionCardState extends State<TransactionCard> {
   @override
   Widget build(BuildContext context) {
+    String categoryName = widget.transaction.category;
+
     return Card(
       margin: EdgeInsets.symmetric(horizontal: mq.width * .04, vertical: 4),
       elevation: 0.5,
-      color: Colors.grey,
+      color: IconsUtil.getColorsForCategory(categoryName),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: ListTile(
         // icon
-        leading: const Icon(
-          FontAwesome.van_shuttle_solid,
-          color: Colors.white,
-          size: 35,
-        ),
+        leading: IconsUtil.getIconForCategory(categoryName),
 
         // title
         title: Text(

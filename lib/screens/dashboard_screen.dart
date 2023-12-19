@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gasto_notes/widgets/add_transaction.dart';
@@ -134,18 +133,44 @@ class _DashboardScreen extends State<DashboardScreen>
                   if (_list.isNotEmpty) {
                     return RefreshIndicator(
                       onRefresh: _refreshData,
-                      child: ListView.builder(
-                        itemCount: _list.length,
-                        reverse: false,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 75,
-                            child: TransactionCard(
-                              transaction: _list[index],
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: Row(
+                              children: [
+                                IncomeCard(user: widget.user),
+                                ExpenseCard(user: widget.user),
+                              ],
                             ),
-                          );
-                        },
+                          ),
+
+                          // Balance
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 25, top: 0, bottom: 10),
+                              child: Balance(user: widget.user),
+                            ),
+                          ),
+                          // list of transactions
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: _list.length,
+                              reverse: false,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  height: 75,
+                                  child: TransactionCard(
+                                    transaction: _list[index],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   } else {

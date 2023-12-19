@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
+import '../model/user.dart';
 
 class ExpenseCard extends StatefulWidget {
-  const ExpenseCard({super.key});
+  const ExpenseCard({super.key, required this.user});
+  final UserData user;
 
   @override
   State<ExpenseCard> createState() => _ExpenseCardState();
@@ -20,14 +22,14 @@ class _ExpenseCardState extends State<ExpenseCard> {
           color: Colors.redAccent,
           width: 160,
           height: 100,
-          child: const Center(
+          child: Center(
             child: ListTile(
-              leading: Icon(
+              leading: const Icon(
                 BoxIcons.bx_line_chart_down,
                 size: 30,
                 color: Colors.white,
               ),
-              title: Text(
+              title: const Text(
                 'Expenses',
                 style: TextStyle(
                   color: Colors.white,
@@ -36,8 +38,8 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 ),
               ),
               subtitle: Text(
-                '₱50.00',
-                style: TextStyle(
+                '₱ ${widget.user.expenses}',
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
                 ),

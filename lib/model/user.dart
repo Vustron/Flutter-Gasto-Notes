@@ -18,9 +18,9 @@ class UserData {
   late String createdAt;
   late String id;
   late String email;
-  late int income;
-  late int expenses;
-  late int balance;
+  late double income;
+  late double expenses;
+  late double balance;
 
   UserData.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? [];
@@ -29,9 +29,9 @@ class UserData {
     createdAt = json['created_at'] ?? [];
     id = json['id'] ?? [];
     email = json['email'] ?? [];
-    income = int.tryParse(json['income'].toString())!;
-    expenses = int.tryParse(json['expenses'].toString())!;
-    balance = int.tryParse(json['balance'].toString())!;
+    income = double.tryParse(json['income'].toString())!;
+    expenses = double.tryParse(json['expenses'].toString())!;
+    balance = double.tryParse(json['balance'].toString())!;
   }
 
   Map<String, dynamic> toJson() {

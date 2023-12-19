@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../model/user.dart';
 
 class Balance extends StatefulWidget {
-  const Balance({super.key});
+  const Balance({super.key, required this.user});
+  final UserData user;
 
   @override
   State<Balance> createState() => _BalanceState();
@@ -10,9 +12,9 @@ class Balance extends StatefulWidget {
 class _BalanceState extends State<Balance> {
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        Text(
+        const Text(
           'Balance:',
           style: TextStyle(
             fontSize: 20,
@@ -20,8 +22,8 @@ class _BalanceState extends State<Balance> {
           ),
         ),
         Text(
-          ' ₱20,000.00',
-          style: TextStyle(
+          ' ₱${widget.user.balance}',
+          style: const TextStyle(
               fontSize: 20, fontWeight: FontWeight.w800, color: Colors.green),
         ),
       ],
