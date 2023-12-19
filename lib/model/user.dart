@@ -8,6 +8,9 @@ class UserData {
     required this.createdAt,
     required this.id,
     required this.email,
+    required this.income,
+    required this.expenses,
+    required this.balance,
   });
   late String image;
   late String about;
@@ -15,6 +18,9 @@ class UserData {
   late String createdAt;
   late String id;
   late String email;
+  late int income;
+  late int expenses;
+  late int balance;
 
   UserData.fromJson(Map<String, dynamic> json) {
     image = json['image'] ?? [];
@@ -23,6 +29,9 @@ class UserData {
     createdAt = json['created_at'] ?? [];
     id = json['id'] ?? [];
     email = json['email'] ?? [];
+    income = int.tryParse(json['income'].toString())!;
+    expenses = int.tryParse(json['expenses'].toString())!;
+    balance = int.tryParse(json['balance'].toString())!;
   }
 
   Map<String, dynamic> toJson() {
@@ -33,6 +42,9 @@ class UserData {
     data['created_at'] = createdAt;
     data['id'] = id;
     data['email'] = email;
+    data['income'] = income;
+    data['expenses'] = expenses;
+    data['balance'] = balance;
     return data;
   }
 }

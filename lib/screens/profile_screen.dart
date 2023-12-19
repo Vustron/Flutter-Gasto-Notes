@@ -15,7 +15,8 @@ import '../widgets/dialogs.dart';
 import 'auth/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final UserData user;
+  const ProfileScreen({super.key, required this.user});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreen();
@@ -32,6 +33,7 @@ class _ProfileScreen extends State<ProfileScreen> {
       child: SafeArea(
         child: Scaffold(
           // appbar
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
@@ -150,7 +152,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                                     width: mq.height * .2,
                                     height: mq.height * .2,
                                     fit: BoxFit.fill,
-                                    imageUrl: API.me.image,
+                                    imageUrl: widget.user.image,
                                     placeholder: (context, url) =>
                                         const CircularProgressIndicator(),
                                     errorWidget: (context, url, error) =>
@@ -182,7 +184,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       SizedBox(height: mq.height * .03),
                       // User Email
                       Text(
-                        API.me.email,
+                        widget.user.email,
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -192,8 +194,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                       SizedBox(height: mq.height * .05),
                       // User Name
                       TextFormField(
-                        initialValue: API.me.name,
-                        onSaved: (val) => API.me.name = val ?? '',
+                        initialValue: widget.user.name,
+                        onSaved: (val) => widget.user.name = val ?? '',
                         validator: (val) => val != null && val.isNotEmpty
                             ? null
                             : 'Required Field',
@@ -220,8 +222,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                       SizedBox(height: mq.height * .02),
                       // User about
                       TextFormField(
-                        initialValue: API.me.about,
-                        onSaved: (val) => API.me.about = val ?? '',
+                        initialValue: widget.user.about,
+                        onSaved: (val) => widget.user.about = val ?? '',
                         validator: (val) => val != null && val.isNotEmpty
                             ? null
                             : 'Required Field',

@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 
+import '../controller/api.dart';
+
 class AddTransaction extends StatefulWidget {
   const AddTransaction({super.key});
 
@@ -21,7 +23,10 @@ class _AddTransactionState extends State<AddTransaction> {
   int? amount = 0;
   // init date picker
   DateTime? pickedDate;
+  // type
   String currentOption = 'Expense';
+  // category
+  String dropdownValue = 'Others';
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +89,7 @@ class _AddTransactionState extends State<AddTransaction> {
         ),
 
         // space
-        const SizedBox(height: 20),
+        const SizedBox(height: 18),
 
         // date
         Align(
@@ -128,8 +133,27 @@ class _AddTransactionState extends State<AddTransaction> {
           ),
         ),
 
-        // space
-        const SizedBox(height: 15),
+        DropdownButton<String>(
+          // Step 3.
+          value: dropdownValue,
+          // Step 4.
+          items: <String>['Utilities', 'Transportation', 'Food', 'Others']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: const TextStyle(fontSize: 15.4),
+              ),
+            );
+          }).toList(),
+          // Step 5.
+          onChanged: (String? newValue) {
+            setState(() {
+              dropdownValue = newValue!;
+            });
+          },
+        ),
 
         // category
         Row(
@@ -186,7 +210,12 @@ class _AddTransactionState extends State<AddTransaction> {
               children: [
                 MaterialButton(
                   onPressed: () async {
-                    print('$title, $amount, $pickedDate, $currentOption');
+                    print(
+                        '$title, $amount, $pickedDate, $dropdownValue,$currentOption');
+                    String formattedDate =
+                        DateFormat('MM/dd/yyyy').format(pickedDate!);
+                    await API.addingTransaction(API.me, title, amount!,
+                        formattedDate, dropdownValue, currentOption);
                     // hide alert dialog
                     Navigator.pop(context);
                   },
@@ -200,8 +229,9 @@ class _AddTransactionState extends State<AddTransaction> {
                   ),
                 ),
                 MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // _dialogController.reverse();
+
                     // hide alert dialog
                     Navigator.pop(context);
                   },

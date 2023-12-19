@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:gasto_notes/main.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../controller/api.dart';
 import '../utils/color_randomizer.dart';
@@ -22,8 +24,6 @@ class _HomeScreen extends State<HomeScreen> {
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
   // init key index
   int index = 1;
-  // init user
-  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -31,36 +31,53 @@ class _HomeScreen extends State<HomeScreen> {
 
     // get self info
     API.getSelfInfo();
+
+    // Second call to get self info after a short delay
+    Future.delayed(Duration(milliseconds: 1000), () {
+      setState(() {});
+      API.getSelfInfo();
+    });
   }
-
-  // init navbar items
-  final items = <Widget>[
-    Icon(
-      Bootstrap.clipboard_data,
-      size: 35,
-      color: Colors.black,
-    ),
-    Icon(
-      Bootstrap.columns_gap,
-      size: 35,
-      color: Colors.black,
-    ),
-    Icon(
-      Icons.person,
-      size: 35,
-      color: Colors.black,
-    ),
-  ];
-
-  // init screens
-  final screens = [
-    TransactionScreen(),
-    DashboardScreen(),
-    ProfileScreen(),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    // init user
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    // init navbar items
+    final items = <Widget>[
+      Icon(
+        Bootstrap.clipboard_data,
+        size: 35,
+        color: Colors.black,
+      ),
+      Icon(
+        Bootstrap.columns_gap,
+        size: 35,
+        color: Colors.black,
+      ),
+      ClipRRect(
+        borderRadius: BorderRadius.circular(mq.height * .1),
+        child: CachedNetworkImage(
+          width: mq.height * .06,
+          height: mq.height * .06,
+          fit: BoxFit.fill,
+          imageUrl: API.me.image,
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => CircleAvatar(
+            child: Icon(Icons.person),
+          ),
+        ),
+      ),
+    ];
+
+    // init screens
+    final screens = [
+      TransactionScreen(),
+      DashboardScreen(user: API.me),
+      ProfileScreen(user: API.me),
+    ];
+
     return SafeArea(
       top: false,
       child: Scaffold(

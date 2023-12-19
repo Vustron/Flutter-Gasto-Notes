@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import '../main.dart';
+import '../model/transaction.dart';
 
 class TransactionCard extends StatefulWidget {
-  const TransactionCard({super.key});
+  final Transactions transaction;
+  const TransactionCard({super.key, required this.transaction});
+
+  // final Transactions transaction;
 
   @override
   State<TransactionCard> createState() => _TransactionCardState();
@@ -18,9 +22,9 @@ class _TransactionCardState extends State<TransactionCard> {
       elevation: 0.5,
       color: Colors.grey,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: const ListTile(
+      child: ListTile(
         // icon
-        leading: Icon(
+        leading: const Icon(
           FontAwesome.van_shuttle_solid,
           color: Colors.white,
           size: 35,
@@ -28,8 +32,8 @@ class _TransactionCardState extends State<TransactionCard> {
 
         // title
         title: Text(
-          'Transportation',
-          style: TextStyle(
+          widget.transaction.title,
+          style: const TextStyle(
             fontWeight: FontWeight.w900,
             fontSize: 16,
             color: Colors.white,
@@ -38,9 +42,9 @@ class _TransactionCardState extends State<TransactionCard> {
 
         // Last message
         subtitle: Text(
-          '₱200.00',
+          '₱  ${widget.transaction.amount}',
           maxLines: 1,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             color: Colors.white,
           ),
@@ -48,9 +52,9 @@ class _TransactionCardState extends State<TransactionCard> {
 
         // date
         trailing: Text(
-          'Jan 2, 2023',
+          widget.transaction.transactionDate,
           maxLines: 1,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             color: Colors.white,
           ),

@@ -51,13 +51,15 @@ class API {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final appUser = UserData(
-      id: user.uid,
-      name: user.displayName.toString(),
-      email: user.email.toString(),
-      about: "Hey I'm using Gasto-Notes!",
-      image: user.photoURL.toString(),
-      createdAt: time,
-    );
+        id: user.uid,
+        name: user.displayName.toString(),
+        email: user.email.toString(),
+        about: "Hey I'm using Gasto-Notes!",
+        image: user.photoURL.toString(),
+        createdAt: time,
+        income: 0,
+        expenses: 0,
+        balance: 0);
 
     return await firestore
         .collection('users')
@@ -121,25 +123,28 @@ class API {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllTransactions(
       UserData appUser) {
     return firestore
-        .collection('transactions/${getTransactionsID(appUser.id)}/')
+        .collection(
+            'transaction_list/${getTransactionsID(appUser.id)}/transactions/')
         .orderBy('type', descending: true)
         .snapshots();
   }
 
   // for adding transactions
   static Future<void> addingTransaction(UserData appUser, String title,
-      int amount, String transactionDate, String category) async {
-    // message to send
+      int amount, String transactionDate, String category, String type) async {
+    // transaction sending time(also used as id)
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    // transaction to send
     final Transactions transaction = Transactions(
-      userId: appUser.id,
-      title: title,
-      amount: amount,
-      transactionDate: transactionDate,
-      category: category,
-    );
+        userId: appUser.id,
+        title: title,
+        amount: amount,
+        transactionDate: transactionDate.toString(),
+        category: category,
+        type: type);
 
-    final ref =
-        firestore.collection('transactions/${getTransactionsID(appUser.id)}');
-    await ref.doc(transactionDate).set(transaction.toJson());
+    final ref = firestore.collection(
+        'transaction_list/${getTransactionsID(appUser.id)}/transactions/');
+    await ref.doc(time).set(transaction.toJson());
   }
 }
