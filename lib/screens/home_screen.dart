@@ -3,10 +3,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:icons_plus/icons_plus.dart';
 import '../controller/api.dart';
+import '../utils/color_randomizer.dart';
 import 'dashboard_screen.dart';
 import 'profile_screen.dart';
-import 'search_screen.dart';
+import 'transactions_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +28,7 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     // get self info
     API.getSelfInfo();
   }
@@ -33,25 +36,25 @@ class _HomeScreen extends State<HomeScreen> {
   // init navbar items
   final items = <Widget>[
     Icon(
-      Icons.search,
+      Bootstrap.clipboard_data,
       size: 35,
-      color: Colors.white,
+      color: Colors.black,
     ),
     Icon(
-      Icons.home,
+      Bootstrap.columns_gap,
       size: 35,
-      color: Colors.white,
+      color: Colors.black,
     ),
     Icon(
       Icons.person,
       size: 35,
-      color: Colors.white,
+      color: Colors.black,
     ),
   ];
 
   // init screens
   final screens = [
-    SearchScreen(),
+    TransactionScreen(),
     DashboardScreen(),
     ProfileScreen(),
   ];
@@ -67,13 +70,14 @@ class _HomeScreen extends State<HomeScreen> {
           // body
           body: screens[index],
 
-          // bottom navbar
+          // bottom navbars
           bottomNavigationBar: CurvedNavigationBar(
             key: navigationKey,
-            color: Colors.grey,
-            buttonBackgroundColor: Colors.grey,
+            color: Colors.white,
+            buttonBackgroundColor: ColorRandomizer.randomColor(),
             backgroundColor: Colors.transparent,
-            animationDuration: Duration(milliseconds: 300),
+            animationDuration: Duration(milliseconds: 500),
+            animationCurve: Curves.linear,
             height: 60.0,
             index: index,
             items: items,

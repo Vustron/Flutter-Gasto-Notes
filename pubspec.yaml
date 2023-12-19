@@ -40,6 +40,14 @@ dependencies:
   cached_network_image: ^3.3.0
   # for picking images
   image_picker: ^1.0.5
+  # for using quick alert
+  quickalert: ^1.0.2
+  # for using more icons
+  icons_plus: ^5.0.0
+  # for using scroll snap list
+  scroll_snap_list: ^0.9.1
+  # for using intl converter
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -49,11 +57,19 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   # for using lints on flutter
   flutter_lints: ^3.0.1
+  # for using native splash screen
+  flutter_native_splash: ^2.3.8
 
+# launcher icon config
 flutter_launcher_icons:
   android: 'launcher_icon'
   image_path: 'assets/images/icon.png'
   min_sdk_android: 21 # android min sdk min:16, default 21
+
+# native splash config
+flutter_native_splash:
+  color: '#FFFFFF'
+  image: 'assets/images/icon.png'
 
 flutter:
   uses-material-design: true

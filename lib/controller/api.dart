@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import '../model/transaction.dart';
 import '../model/user.dart';
 
 class API {
@@ -34,6 +35,15 @@ class API {
         createUser().then((value) => getSelfInfo());
       }
     });
+  }
+
+  // for getting specific user info
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
+      UserData user) {
+    return firestore
+        .collection('users')
+        .where('id', isEqualTo: user.id)
+        .snapshots();
   }
 
   // for creating a new user
@@ -99,5 +109,37 @@ class API {
     await firestore.collection('users').doc(user.uid).update({
       'image': me.image,
     });
+  }
+
+  ///****************Transaction Screen related API**********************
+  //get conversation id
+  static String getTransactionsID(String id) => user.uid.hashCode <= id.hashCode
+      ? '${user.uid}_$id'
+      : '${id}_${user.uid}';
+
+  // Get all transactions
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllTransactions(
+      UserData appUser) {
+    return firestore
+        .collection('transactions/${getTransactionsID(appUser.id)}/')
+        .orderBy('type', descending: true)
+        .snapshots();
+  }
+
+  // for adding transactions
+  static Future<void> addingTransaction(UserData appUser, String title,
+      int amount, String transactionDate, String category) async {
+    // message to send
+    final Transactions transaction = Transactions(
+      userId: appUser.id,
+      title: title,
+      amount: amount,
+      transactionDate: transactionDate,
+      category: category,
+    );
+
+    final ref =
+        firestore.collection('transactions/${getTransactionsID(appUser.id)}');
+    await ref.doc(transactionDate).set(transaction.toJson());
   }
 }

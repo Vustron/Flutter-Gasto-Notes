@@ -34,16 +34,22 @@ class _ProfileScreen extends State<ProfileScreen> {
           // appbar
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.white,
             elevation: 0,
             centerTitle: true,
             // title
             title: const Text(
               'Profile',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+            shape: const ContinuousRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(60.0),
+                bottomRight: Radius.circular(60.0),
               ),
             ),
           ),
@@ -163,10 +169,10 @@ class _ProfileScreen extends State<ProfileScreen> {
                                 _showBottomSheet();
                               },
                               shape: const CircleBorder(),
-                              color: Colors.grey,
+                              color: Colors.white,
                               child: const Icon(
                                 Icons.edit,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -178,7 +184,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       Text(
                         API.me.email,
                         style: const TextStyle(
-                          color: Colors.black54,
+                          color: Colors.black,
                           fontSize: 16,
                         ),
                       ),
@@ -194,17 +200,17 @@ class _ProfileScreen extends State<ProfileScreen> {
                         decoration: InputDecoration(
                           prefixIcon: const Icon(
                             Icons.person,
-                            color: Colors.grey,
+                            color: Colors.black,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 12),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(color: Colors.grey),
+                            borderSide: const BorderSide(color: Colors.black),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(color: Colors.grey),
+                            borderSide: const BorderSide(color: Colors.black),
                           ),
                           hintText: 'eg. John Doe',
                           labelText: 'Name',
@@ -222,17 +228,17 @@ class _ProfileScreen extends State<ProfileScreen> {
                         decoration: InputDecoration(
                           prefixIcon: const Icon(
                             Icons.info_outline,
-                            color: Colors.grey,
+                            color: Colors.black,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 12),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(color: Colors.grey),
+                            borderSide: const BorderSide(color: Colors.black),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(color: Colors.grey),
+                            borderSide: const BorderSide(color: Colors.black),
                           ),
                           hintText: 'eg. Feeling Happy',
                           labelText: 'About',
@@ -263,19 +269,19 @@ class _ProfileScreen extends State<ProfileScreen> {
                         },
                         icon: const Icon(
                           Icons.edit,
-                          color: Colors.white,
+                          color: Colors.black,
                           size: 28,
                         ),
                         label: const Text(
                           'Update',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
                           shape: const StadiumBorder(),
-                          backgroundColor: Colors.grey,
+                          backgroundColor: Colors.white70,
                           minimumSize: Size(mq.width * .5, mq.height * .06),
                         ),
                       ),
@@ -292,7 +298,7 @@ class _ProfileScreen extends State<ProfileScreen> {
 
   void _showBottomSheet() {
     showModalBottomSheet(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         context: context,
         builder: (_) {
           return ListView(
@@ -307,7 +313,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
               // for adding some space
@@ -319,7 +325,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   // pick from gallery button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.white70,
                       fixedSize: Size(mq.width * .3, mq.height * .14),
                     ),
                     onPressed: () async {
@@ -345,7 +351,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                   // take a picture from camera
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.white70,
                       fixedSize: Size(mq.width * .3, mq.height * .14),
                     ),
                     onPressed: () async {

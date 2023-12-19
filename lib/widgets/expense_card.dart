@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class ExpenseCard extends StatefulWidget {
   const ExpenseCard({super.key});
@@ -21,9 +22,10 @@ class _ExpenseCardState extends State<ExpenseCard> {
           height: 100,
           child: const Center(
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/diagram_down.png'),
-                radius: 15, // Adjust the radius as needed
+              leading: Icon(
+                BoxIcons.bx_line_chart_down,
+                size: 30,
+                color: Colors.white,
               ),
               title: Text(
                 'Expenses',
@@ -34,7 +36,7 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 ),
               ),
               subtitle: Text(
-                '₱50',
+                '₱50.00',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
