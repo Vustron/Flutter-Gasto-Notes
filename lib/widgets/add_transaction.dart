@@ -1,4 +1,4 @@
-// ignore_for_file: sort_child_properties_last, avoid_print
+// ignore_for_file: sort_child_properties_last, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,29 +46,27 @@ class _AddTransactionState extends State<AddTransaction> {
       child: Column(
         children: [
           // title
-          Expanded(
-            child: TextFormField(
-              maxLines: null,
-              controller: titleController,
-              onChanged: (value) => title = value,
-              validator: (value) => value!.isEmpty ? "Enter a title" : null,
-              style: const TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                labelText: 'Title',
-                hintText: 'e.g. Pamasahe',
-                hintStyle: const TextStyle(color: Colors.black38),
-                prefixIcon: const Icon(
-                  BoxIcons.bx_comment_add,
-                  color: Colors.black,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Colors.black),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Colors.black),
-                ),
+          TextFormField(
+            maxLines: null,
+            controller: titleController,
+            onChanged: (value) => title = value,
+            validator: (value) => value!.isEmpty ? "Enter a title" : null,
+            style: const TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              labelText: 'Title',
+              hintText: 'e.g. Pamasahe',
+              hintStyle: const TextStyle(color: Colors.black38),
+              prefixIcon: const Icon(
+                BoxIcons.bx_comment_add,
+                color: Colors.black,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
               ),
             ),
           ),
@@ -77,46 +75,44 @@ class _AddTransactionState extends State<AddTransaction> {
           const SizedBox(height: 20),
 
           // amount
-          Expanded(
-            child: TextFormField(
-              maxLines: null,
-              controller: amountController,
-              onChanged: (value) {
-                amount = double.tryParse(value) ?? 0.0;
-              },
-              validator: (value) => value!.isEmpty ? "Enter an amount" : null,
-              style: const TextStyle(color: Colors.black),
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: false,
+          TextFormField(
+            maxLines: null,
+            controller: amountController,
+            onChanged: (value) {
+              amount = double.tryParse(value) ?? 0.0;
+            },
+            validator: (value) => value!.isEmpty ? "Enter an amount" : null,
+            style: const TextStyle(color: Colors.black),
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+              signed: false,
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+              TextInputFormatter.withFunction((oldValue, newValue) {
+                final text = newValue.text;
+                return text.isEmpty
+                    ? newValue
+                    : double.tryParse(text) == null
+                        ? oldValue
+                        : newValue;
+              }),
+            ],
+            decoration: InputDecoration(
+              labelText: 'Amount',
+              hintText: 'e.g. ₱ 20.00',
+              hintStyle: const TextStyle(color: Colors.black38),
+              prefixIcon: const Icon(
+                Bootstrap.cash_stack,
+                color: Colors.black,
               ),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
-                TextInputFormatter.withFunction((oldValue, newValue) {
-                  final text = newValue.text;
-                  return text.isEmpty
-                      ? newValue
-                      : double.tryParse(text) == null
-                          ? oldValue
-                          : newValue;
-                }),
-              ],
-              decoration: InputDecoration(
-                labelText: 'Amount',
-                hintText: 'e.g. ₱ 20.00',
-                hintStyle: const TextStyle(color: Colors.black38),
-                prefixIcon: const Icon(
-                  Bootstrap.cash_stack,
-                  color: Colors.black,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Colors.black),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Colors.black),
-                ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
               ),
             ),
           ),
@@ -265,15 +261,23 @@ class _AddTransactionState extends State<AddTransaction> {
                       if (_formKey.currentState!.validate()) {
                         String formattedDate =
                             DateFormat('MM/dd/yyyy').format(pickedDate!);
-                        await API.addingTransaction(
-                          API.me,
-                          title,
-                          amount!,
-                          formattedDate,
-                          dropdownValue,
-                          currentOption,
-                        );
-                        Navigator.pop(context);
+                        try {
+                          await API.addingTransaction(
+                            API.me,
+                            title,
+                            amount!,
+                            formattedDate,
+                            dropdownValue,
+                            currentOption,
+                          );
+                          Dialogs.showSuccessSnackbar(
+                              context, 'Transaction added!');
+                          Navigator.pop(context);
+                        } catch (error) {
+                          print(error);
+                          Dialogs.showErrorSnackbar(
+                              context, 'Transaction failed!');
+                        }
                       }
                     },
                     child: const Text(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../model/user.dart';
+import '../utils/display_util.dart';
 
 class IncomeCard extends StatefulWidget {
   const IncomeCard({super.key, required this.user});
@@ -25,22 +26,24 @@ class _IncomeCardState extends State<IncomeCard> {
           child: Center(
             child: ListTile(
               leading: const Icon(
-                BoxIcons.bx_line_chart,
+                BoxIcons.bx_arrow_to_top,
                 size: 30,
                 color: Colors.white,
               ),
               title: const Text(
                 'Income',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 14),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
               ),
               subtitle: Text(
-                '₱ ${widget.user.income}',
+                DisplayUtil().getDisplayAmount(widget.user.income),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
+                  fontSize: 14,
                 ),
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import '../model/transaction.dart';
 import '../utils/icons_util.dart';
+import '../utils/display_util.dart';
 
 class TransactionCard extends StatefulWidget {
   final Transactions transaction;
@@ -37,9 +38,9 @@ class _TransactionCardState extends State<TransactionCard> {
           ),
         ),
 
-        // Last message
+        // transaction amount
         subtitle: Text(
-          '₱  ${widget.transaction.amount}',
+          DisplayUtil().getDisplayAmount(widget.transaction.amount),
           maxLines: 1,
           style: const TextStyle(
             fontSize: 12,

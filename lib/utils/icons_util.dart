@@ -69,6 +69,12 @@ class IconsUtil {
           color: Colors.white,
           size: 35,
         );
+      case 'Work':
+        return const Icon(
+          Icons.work,
+          color: Colors.white,
+          size: 35,
+        );
       default:
         return const Icon(
           Icons.category,
@@ -102,8 +108,10 @@ class IconsUtil {
         return Colors.teal;
       case 'Personal':
         return Colors.pink;
+      case 'Work':
+        return Colors.greenAccent;
       default:
-        return Colors.white;
+        return Colors.black;
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../controller/api.dart';
 import '../model/user.dart';
+import '../utils/display_util.dart';
 
 class Balance extends StatefulWidget {
   const Balance({super.key, required this.user});
@@ -12,22 +12,10 @@ class Balance extends StatefulWidget {
 
 class _BalanceState extends State<Balance> {
   @override
-  void initState() {
-    super.initState();
-
-    // Second call to get self info after a short delay
-    Future.delayed(const Duration(milliseconds: 200), () async {
-      if (!mounted) {
-        setState(() {});
-        await API.getBalance(widget.user).then((value) => API.getSelfInfo());
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // label
         const Text(
           'Balance:',
           style: TextStyle(
@@ -35,8 +23,12 @@ class _BalanceState extends State<Balance> {
             fontWeight: FontWeight.w800,
           ),
         ),
+
+        // balance
         Text(
-          ' ₱${widget.user.balance}',
+          widget.user.balance >= 0
+              ? DisplayUtil().getDisplayAmount(widget.user.balance)
+              : DisplayUtil().getDisplayNegativeAmount(widget.user.balance),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w800,

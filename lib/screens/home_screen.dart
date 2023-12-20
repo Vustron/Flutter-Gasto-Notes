@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:gasto_notes/main.dart';
@@ -42,6 +43,7 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // init user
+    User? user = FirebaseAuth.instance.currentUser;
 
     // init navbar items
     final items = <Widget>[
@@ -61,7 +63,7 @@ class _HomeScreen extends State<HomeScreen> {
           width: mq.height * .06,
           height: mq.height * .06,
           fit: BoxFit.fill,
-          imageUrl: API.me.image,
+          imageUrl: user?.photoURL ?? '',
           placeholder: (context, url) => CircularProgressIndicator(),
           errorWidget: (context, url, error) => CircleAvatar(
             child: Icon(Icons.person),

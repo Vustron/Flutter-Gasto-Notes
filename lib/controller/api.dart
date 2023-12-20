@@ -155,24 +155,20 @@ class API {
     await ref.doc(time).set(transaction.toJson());
 
     if (transaction.type == 'Expense' || transaction.type == 'Income') {
-      // Assuming you have 'income' and 'expenses' properties in UserData class
       double newAmount = transaction.type == 'Expense'
           ? appUser.expenses + amount
           : appUser.income + amount;
+
+      double newBalance = transaction.type == 'Expense'
+          ? appUser.balance - amount
+          : appUser.balance + amount;
 
       await firestore.collection('users').doc(appUser.id).update({
         'expenses':
             transaction.type == 'Expense' ? newAmount : appUser.expenses,
         'income': transaction.type == 'Income' ? newAmount : appUser.income,
+        'balance': newBalance,
       });
     }
-  }
-
-  static Future<void> getBalance(UserData appUser) async {
-    // Assuming you have 'balance', 'income', and 'expenses' properties in UserData class
-    double balance = appUser.income - appUser.expenses;
-    await firestore.collection('users').doc(appUser.id).update({
-      'balance': balance,
-    });
   }
 }

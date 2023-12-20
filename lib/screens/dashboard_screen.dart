@@ -35,6 +35,8 @@ class _DashboardScreen extends State<DashboardScreen>
   void initState() {
     super.initState();
 
+    API.getSelfInfo();
+
     // dialog control animation
     _dialogController = AnimationController(
       vsync: this,
