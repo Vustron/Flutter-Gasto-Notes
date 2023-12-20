@@ -87,7 +87,7 @@ class IconsUtil {
       case 'Food':
         return Colors.green;
       case 'Others':
-        return Colors.white;
+        return Colors.black;
       case 'Housing':
         return Colors.orange;
       case 'Taxes':

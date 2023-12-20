@@ -131,25 +131,48 @@ class API {
 
   // for adding transactions
   static Future<void> addingTransaction(
-      UserData appUser,
-      String title,
-      double amount,
-      String transactionDate,
-      String category,
-      String type) async {
+    UserData appUser,
+    String title,
+    double amount,
+    String transactionDate,
+    String category,
+    String type,
+  ) async {
     // transaction sending time(also used as id)
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     // transaction to send
     final Transactions transaction = Transactions(
-        userId: appUser.id,
-        title: title,
-        amount: amount,
-        transactionDate: transactionDate.toString(),
-        category: category,
-        type: type);
+      userId: appUser.id,
+      title: title,
+      amount: amount,
+      transactionDate: transactionDate,
+      category: category,
+      type: type,
+    );
 
     final ref = firestore.collection(
         'transaction_list/${getTransactionsID(appUser.id)}/transactions/');
     await ref.doc(time).set(transaction.toJson());
+
+    if (transaction.type == 'Expense' || transaction.type == 'Income') {
+      // Assuming you have 'income' and 'expenses' properties in UserData class
+      double newAmount = transaction.type == 'Expense'
+          ? appUser.expenses + amount
+          : appUser.income + amount;
+
+      await firestore.collection('users').doc(appUser.id).update({
+        'expenses':
+            transaction.type == 'Expense' ? newAmount : appUser.expenses,
+        'income': transaction.type == 'Income' ? newAmount : appUser.income,
+      });
+    }
+  }
+
+  static Future<void> getBalance(UserData appUser) async {
+    // Assuming you have 'balance', 'income', and 'expenses' properties in UserData class
+    double balance = appUser.income - appUser.expenses;
+    await firestore.collection('users').doc(appUser.id).update({
+      'balance': balance,
+    });
   }
 }

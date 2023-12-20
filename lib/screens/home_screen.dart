@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:gasto_notes/main.dart';
@@ -29,20 +28,20 @@ class _HomeScreen extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // get self info
-    API.getSelfInfo();
+    setState(() {
+      API.getSelfInfo();
+    });
 
     // Second call to get self info after a short delay
-    Future.delayed(Duration(milliseconds: 1000), () {
+    Future.delayed(Duration(milliseconds: 2000), () async {
       setState(() {});
-      API.getSelfInfo();
+      await API.getSelfInfo();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // init user
-    final User? user = FirebaseAuth.instance.currentUser;
 
     // init navbar items
     final items = <Widget>[

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, deprecated_member_use
+// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, deprecated_member_use, unused_field
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

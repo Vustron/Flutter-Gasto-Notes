@@ -22,10 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        _isAnimate = true;
-      });
+      // Check if the widget is mounted before calling setState
+      if (mounted) {
+        setState(() {
+          _isAnimate = true;
+        });
+      }
     });
   }
 

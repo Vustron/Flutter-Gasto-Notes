@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 import '../main.dart';
 import '../model/transaction.dart';
 import '../utils/icons_util.dart';

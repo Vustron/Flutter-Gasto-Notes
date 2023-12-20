@@ -47,4 +47,6 @@ class UserData {
     data['balance'] = balance;
     return data;
   }
+
+  copyWith() {}
 }

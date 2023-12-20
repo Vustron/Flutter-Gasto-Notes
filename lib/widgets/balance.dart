@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../controller/api.dart';
 import '../model/user.dart';
 
 class Balance extends StatefulWidget {
@@ -10,6 +11,19 @@ class Balance extends StatefulWidget {
 }
 
 class _BalanceState extends State<Balance> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Second call to get self info after a short delay
+    Future.delayed(const Duration(milliseconds: 200), () async {
+      if (!mounted) {
+        setState(() {});
+        await API.getBalance(widget.user).then((value) => API.getSelfInfo());
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -23,8 +37,11 @@ class _BalanceState extends State<Balance> {
         ),
         Text(
           ' ₱${widget.user.balance}',
-          style: const TextStyle(
-              fontSize: 20, fontWeight: FontWeight.w800, color: Colors.green),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: widget.user.balance < 0 ? Colors.red : Colors.green,
+          ),
         ),
       ],
     );
