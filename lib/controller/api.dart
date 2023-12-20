@@ -148,6 +148,7 @@ class API {
       transactionDate: transactionDate,
       category: category,
       type: type,
+      sent: time,
     );
 
     final ref = firestore.collection(
@@ -167,6 +168,79 @@ class API {
         'expenses':
             transaction.type == 'Expense' ? newAmount : appUser.expenses,
         'income': transaction.type == 'Income' ? newAmount : appUser.income,
+        'balance': newBalance,
+      });
+    }
+  }
+
+  // for updating transactions
+  static Future<void> updateTransaction(
+    UserData appUser,
+    Transactions transaction,
+    String title,
+    double amount,
+    String transactionDate,
+    String category,
+    String type,
+  ) async {
+    // Transaction sending time (also used as id)
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final transactionCollection = firestore.collection(
+      'transaction_list/${getTransactionsID(appUser.id)}/transactions/',
+    );
+
+    await transactionCollection.doc(transaction.sent).update({
+      'title': title,
+      'amount': amount,
+      'transactionDate': transactionDate,
+      'category': category,
+      'type': type,
+    });
+
+    if (transaction.type == 'Expense' || transaction.type == 'Income') {
+      double newAmount = transaction.type == 'Expense'
+          ? appUser.expenses + amount
+          : appUser.income + amount;
+
+      double newBalance = transaction.type == 'Expense'
+          ? appUser.balance - amount
+          : appUser.balance + amount;
+
+      await firestore.collection('users').doc(appUser.id).update({
+        'expenses':
+            transaction.type == 'Expense' ? newAmount : appUser.expenses,
+        'income': transaction.type == 'Income' ? newAmount : appUser.income,
+        'balance': newBalance,
+      });
+    }
+  }
+
+  // for deleting transactions
+  static Future<void> deleteTransaction(
+    UserData appUser,
+    Transactions transaction,
+    double amount,
+    String type,
+  ) async {
+    final transactionCollection = firestore.collection(
+      'transaction_list/${getTransactionsID(appUser.id)}/transactions/',
+    );
+
+    await transactionCollection.doc(transaction.sent).delete();
+
+    if (type == 'Expense' || type == 'Income') {
+      double newAmount = type == 'Expense'
+          ? appUser.expenses - amount
+          : appUser.income - amount;
+
+      double newBalance = type == 'Expense'
+          ? appUser.balance + amount
+          : appUser.balance - amount;
+
+      await firestore.collection('users').doc(appUser.id).update({
+        'expenses': type == 'Expense' ? newAmount : appUser.expenses,
+        'income': type == 'Income' ? newAmount : appUser.income,
         'balance': newBalance,
       });
     }

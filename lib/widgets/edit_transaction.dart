@@ -1,0 +1,321 @@
+// ignore_for_file: sort_child_properties_last, avoid_print, use_build_context_synchronously
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:intl/intl.dart';
+import '../controller/api.dart';
+import '../model/transaction.dart';
+import '../utils/display_util.dart';
+import 'dialogs.dart';
+
+class EditTransaction extends StatefulWidget {
+  final Transactions transaction;
+  const EditTransaction({super.key, required this.transaction});
+
+  @override
+  State<EditTransaction> createState() => _EditTransactionState();
+}
+
+class _EditTransactionState extends State<EditTransaction> {
+  // init form key
+  final _formKey = GlobalKey<FormState>();
+  // init title controller
+  final titleController = TextEditingController();
+  // init amount controller
+  final amountController = TextEditingController();
+  // init date controller
+  final dateController = TextEditingController();
+  // init type controller
+  final typeController = TextEditingController();
+  // category controller
+  final categoryController = TextEditingController();
+  // init title
+  String title = '';
+  // init amount
+  double? amount = 0.00;
+  // init picked date
+  DateTime? pickedDate;
+  // type
+  String currentOption = 'Expense';
+  // category
+  String dropdownValue = 'Others';
+
+  @override
+  Widget build(BuildContext context) {
+    // init options
+    final options = ['Expense', 'Income'];
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          // title
+          TextFormField(
+            maxLines: null,
+            controller: titleController,
+            onChanged: (value) => title = value,
+            validator: (value) => value!.isEmpty ? "Enter a title" : null,
+            style: const TextStyle(color: Colors.black),
+            decoration: InputDecoration(
+              labelText: 'Title',
+              hintText: widget.transaction.title,
+              hintStyle: const TextStyle(color: Colors.black38),
+              prefixIcon: const Icon(
+                BoxIcons.bx_comment_add,
+                color: Colors.black,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+            ),
+          ),
+
+          // space
+          const SizedBox(height: 20),
+
+          // amount
+          TextFormField(
+            maxLines: null,
+            controller: amountController,
+            onChanged: (value) {
+              amount = double.tryParse(value) ?? 0.0;
+            },
+            validator: (value) => value!.isEmpty ? "Enter an amount" : null,
+            style: const TextStyle(color: Colors.black),
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+              signed: false,
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+              TextInputFormatter.withFunction((oldValue, newValue) {
+                final text = newValue.text;
+                return text.isEmpty
+                    ? newValue
+                    : double.tryParse(text) == null
+                        ? oldValue
+                        : newValue;
+              }),
+            ],
+            decoration: InputDecoration(
+              labelText: 'Amount',
+              hintText: DisplayUtil().formatAmount(widget.transaction.amount),
+              hintStyle: const TextStyle(color: Colors.black38),
+              prefixIcon: const Icon(
+                Bootstrap.cash_stack,
+                color: Colors.black,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.black),
+              ),
+            ),
+          ),
+
+          // space
+          const SizedBox(height: 18),
+
+          // date
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextFormField(
+                onTap: () async {
+                  // user can pick date
+                  pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+
+                  if (pickedDate != null) {
+                    String formattedDate =
+                        DateFormat('MM/dd/yyyy').format(pickedDate!);
+                    dateController.text = formattedDate;
+                    setState(() {});
+                  }
+                },
+                controller: dateController,
+                validator: (value) => value!.isEmpty ? "Enter date" : null,
+                decoration: InputDecoration(
+                  labelText: "Date",
+                  hintText: widget.transaction.transactionDate,
+                  hintStyle: const TextStyle(
+                    color: Colors.black,
+                  ),
+                  filled: true,
+                  prefixIcon: const Icon(Icons.calendar_today),
+                  prefixIconColor: Colors.black,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Colors.black),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Colors.black),
+                  ),
+                ),
+                readOnly: true,
+              ),
+            ),
+          ),
+
+          Expanded(
+            child: DropdownButton<String>(
+              value: dropdownValue,
+              items: <String>[
+                'Utilities',
+                'Transportation',
+                'Food',
+                'Others',
+                'Housing',
+                'Taxes',
+                'Repairs',
+                'Healthcare',
+                'Insurance',
+                'Supplies',
+                'Personal',
+                'Work',
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: const TextStyle(fontSize: 15.4),
+                  ),
+                );
+              }).toList(),
+              // Step 5.
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownValue = newValue!;
+                });
+              },
+            ),
+          ),
+
+          // category
+          Expanded(
+            child: Row(
+              children: [
+                RadioMenuButton<String>(
+                  value: options[0],
+                  groupValue: currentOption,
+                  onChanged: (expense) {
+                    setState(() {
+                      currentOption = expense!;
+                    });
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 0),
+                    child: Text(
+                      "Expense",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15.4,
+                      ),
+                    ),
+                  ),
+                ),
+                RadioMenuButton<String>(
+                  style: ButtonStyle(
+                    iconSize: MaterialStateProperty.all(20),
+                  ),
+                  value: options[1],
+                  groupValue: currentOption,
+                  onChanged: (income) {
+                    setState(() {
+                      currentOption = income!;
+                    });
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 0),
+                    child: Text(
+                      "Income",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15.4,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // actions
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Row(
+                children: [
+                  MaterialButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        String formattedDate =
+                            DateFormat('MM/dd/yyyy').format(pickedDate!);
+                        try {
+                          await API.updateTransaction(
+                            API.me,
+                            widget.transaction,
+                            title,
+                            amount!,
+                            formattedDate,
+                            dropdownValue,
+                            currentOption,
+                          );
+                          Dialogs.showSuccessSnackbar(
+                              context, 'Transaction updated!');
+                          Navigator.pop(context);
+                        } catch (error) {
+                          print(error);
+                          Dialogs.showErrorSnackbar(
+                              context, 'Transaction failed!');
+                        }
+                      }
+                    },
+                    child: const Text(
+                      'Update',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: () async {
+                      // _dialogController.reverse();
+
+                      // hide alert dialog
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

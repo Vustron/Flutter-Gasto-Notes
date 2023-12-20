@@ -374,6 +374,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.17"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      sha256: "19ed4813003a6ff4e9c6bcce37e792a2a358919d7603b2b31ff200229191e44c"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.0.1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -744,14 +752,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.1.1"
-  quickalert:
-    dependency: "direct main"
-    description:
-      name: quickalert
-      sha256: "0c21c9be68b9ae76082e1ad56db9f51202a38e617e08376f05375238277cfb5a"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.2"
   rxdart:
     dependency: transitive
     description:
@@ -760,14 +760,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.27.7"
-  scroll_snap_list:
-    dependency: "direct main"
-    description:
-      name: scroll_snap_list
-      sha256: "8009ad9030f680b93f3107b29b1ea31284d867aa4972868d2970c6d61fe9e59f"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.9.1"
   sky_engine:
     dependency: transitive
     description: flutter

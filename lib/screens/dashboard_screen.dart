@@ -2,8 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gasto_notes/widgets/add_transaction.dart';
+import 'package:gasto_notes/widgets/delete_transaction.dart';
 import 'package:gasto_notes/widgets/view_expenses.dart';
 import 'package:gasto_notes/widgets/view_income.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -11,6 +13,7 @@ import '../controller/api.dart';
 import '../model/transaction.dart';
 import '../model/user.dart';
 import '../widgets/balance.dart';
+import '../widgets/edit_transaction.dart';
 import '../widgets/expense_card.dart';
 import '../widgets/income_card.dart';
 import '../widgets/transaction_card.dart';
@@ -55,6 +58,7 @@ class _DashboardScreen extends State<DashboardScreen>
   Future<void> _refreshData() async {
     setState(() {
       _stream = API.getAllTransactions(widget.user);
+      API.getSelfInfo();
     });
   }
 
@@ -181,6 +185,7 @@ class _DashboardScreen extends State<DashboardScreen>
                               ),
                             ),
                           ),
+
                           // list of transactions
                           Expanded(
                             child: ListView.builder(
@@ -194,8 +199,36 @@ class _DashboardScreen extends State<DashboardScreen>
                                     onTap: () {
                                       _viewTransaction(index);
                                     },
-                                    child: TransactionCard(
-                                      transaction: _list[index],
+                                    child: Slidable(
+                                      startActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (BuildContext context) =>
+                                                _deleteTransaction(index),
+                                            backgroundColor: Colors.red,
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.delete,
+                                            label: 'Delete',
+                                          ),
+                                        ],
+                                      ),
+                                      endActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (BuildContext context) =>
+                                                _editTransaction(index),
+                                            backgroundColor: Colors.yellow,
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.edit,
+                                            label: 'Edit',
+                                          ),
+                                        ],
+                                      ),
+                                      child: TransactionCard(
+                                        transaction: _list[index],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -436,4 +469,94 @@ class _DashboardScreen extends State<DashboardScreen>
     );
     _dialogController.forward();
   }
+
+  // add transaction
+  void _editTransaction(index) {
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            title: const Row(
+              children: [
+                Icon(
+                  BoxIcons.bx_edit,
+                  color: Colors.black,
+                  size: 28,
+                ),
+                Text(
+                  ' Edit Transaction',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+            content: Container(
+              height: 400,
+              child: EditTransaction(
+                transaction: _list[index],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    _dialogController.forward();
+  }
+
+  // view expenses
+  void _deleteTransaction(index) {
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            title: const Row(
+              children: [
+                Icon(
+                  BoxIcons.bx_trash,
+                  color: Colors.black,
+                  size: 28,
+                ),
+                Text(
+                  ' Delete Transaction',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+            content: Container(
+                height: 70,
+                child: DeleteTransaction(
+                  user: API.me,
+                  transaction: _list[index],
+                )),
+          ),
+        ),
+      ),
+    );
+    _dialogController.forward();
+  }
+
+  void doNothing(BuildContext context) {}
 }

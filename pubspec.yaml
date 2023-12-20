@@ -40,14 +40,12 @@ dependencies:
   cached_network_image: ^3.3.0
   # for picking images
   image_picker: ^1.0.5
-  # for using quick alert
-  quickalert: ^1.0.2
   # for using more icons
   icons_plus: ^5.0.0
-  # for using scroll snap list
-  scroll_snap_list: ^0.9.1
   # for using intl converter
   intl: ^0.19.0
+  # for using slidable
+  flutter_slidable: ^3.0.1
 
 dev_dependencies:
   flutter_test:

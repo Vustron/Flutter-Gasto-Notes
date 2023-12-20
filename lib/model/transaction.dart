@@ -7,6 +7,7 @@ class Transactions {
     required this.transactionDate,
     required this.category,
     required this.type,
+    required this.sent,
   });
   late final String userId;
   late final String title;
@@ -14,6 +15,7 @@ class Transactions {
   late final String transactionDate;
   late final String category;
   late final String type;
+  late final String sent;
 
   Transactions.fromJson(Map<String, dynamic> json) {
     userId = json['userId'].toString();
@@ -22,6 +24,7 @@ class Transactions {
     transactionDate = json['transactionDate'].toString();
     category = json['category'].toString();
     type = json['type'].toString();
+    sent = json['sent'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -32,6 +35,7 @@ class Transactions {
     data['transactionDate'] = transactionDate;
     data['category'] = category;
     data['type'] = type;
+    data['sent'] = sent;
     return data;
   }
 }
