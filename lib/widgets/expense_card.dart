@@ -48,7 +48,7 @@ class _ExpenseCardState extends State<ExpenseCard> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
-                  fontSize: 14,
+                  fontSize: 12,
                 ),
               ),
             ),

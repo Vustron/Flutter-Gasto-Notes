@@ -43,7 +43,7 @@ class _IncomeCardState extends State<IncomeCard> {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
-                  fontSize: 14,
+                  fontSize: 12,
                 ),
               ),
             ),

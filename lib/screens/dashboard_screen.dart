@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gasto_notes/widgets/add_transaction.dart';
+import 'package:gasto_notes/widgets/view_expenses.dart';
+import 'package:gasto_notes/widgets/view_income.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../controller/api.dart';
 import '../model/transaction.dart';
@@ -12,6 +14,8 @@ import '../widgets/balance.dart';
 import '../widgets/expense_card.dart';
 import '../widgets/income_card.dart';
 import '../widgets/transaction_card.dart';
+import '../widgets/view_balance.dart';
+import '../widgets/view_transaction.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, required this.user});
@@ -142,8 +146,22 @@ class _DashboardScreen extends State<DashboardScreen>
                                 horizontal: 10, vertical: 10),
                             child: Row(
                               children: [
-                                IncomeCard(user: widget.user),
-                                ExpenseCard(user: widget.user),
+                                InkWell(
+                                  onTap: () {
+                                    _viewIncome();
+                                  },
+                                  child: IncomeCard(
+                                    user: widget.user,
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    _viewExpenses();
+                                  },
+                                  child: ExpenseCard(
+                                    user: widget.user,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -153,7 +171,14 @@ class _DashboardScreen extends State<DashboardScreen>
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   left: 25, top: 0, bottom: 10),
-                              child: Balance(user: widget.user),
+                              child: InkWell(
+                                onTap: () {
+                                  _viewBalance();
+                                },
+                                child: Balance(
+                                  user: widget.user,
+                                ),
+                              ),
                             ),
                           ),
                           // list of transactions
@@ -165,8 +190,13 @@ class _DashboardScreen extends State<DashboardScreen>
                               itemBuilder: (context, index) {
                                 return Container(
                                   height: 75,
-                                  child: TransactionCard(
-                                    transaction: _list[index],
+                                  child: InkWell(
+                                    onTap: () {
+                                      _viewTransaction(index);
+                                    },
+                                    child: TransactionCard(
+                                      transaction: _list[index],
+                                    ),
                                   ),
                                 );
                               },
@@ -193,6 +223,7 @@ class _DashboardScreen extends State<DashboardScreen>
     );
   }
 
+  // add transaction
   void _addTransaction() {
     showDialog(
       context: context,
@@ -227,6 +258,178 @@ class _DashboardScreen extends State<DashboardScreen>
               height: 400,
               child: const AddTransaction(),
             ),
+          ),
+        ),
+      ),
+    );
+    _dialogController.forward();
+  }
+
+  // view transaction
+  void _viewTransaction(index) {
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.black,
+                  size: 28,
+                ),
+                Text(
+                  ' View Transaction',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+            content: Container(
+                height: 520,
+                child: ViewTransaction(
+                  transaction: _list[index],
+                )),
+          ),
+        ),
+      ),
+    );
+    _dialogController.forward();
+  }
+
+  // view income
+  void _viewIncome() {
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.black,
+                  size: 28,
+                ),
+                Text(
+                  ' View Income',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+            content: Container(
+                height: 120,
+                child: ViewIncome(
+                  user: widget.user,
+                )),
+          ),
+        ),
+      ),
+    );
+    _dialogController.forward();
+  }
+
+  // view expenses
+  void _viewExpenses() {
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.black,
+                  size: 28,
+                ),
+                Text(
+                  ' View Expenses',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+            content: Container(
+                height: 120,
+                child: ViewExpenses(
+                  user: widget.user,
+                )),
+          ),
+        ),
+      ),
+    );
+    _dialogController.forward();
+  }
+
+  // view expenses
+  void _viewBalance() {
+    showDialog(
+      context: context,
+      builder: (_) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: const Offset(0, 0),
+        ).animate(CurvedAnimation(
+          parent: _dialogController,
+          curve: Curves.easeInOut,
+        )),
+        child: Material(
+          type: MaterialType.transparency,
+          child: AlertDialog(
+            contentPadding:
+                const EdgeInsets.only(left: 24, right: 24, top: 20, bottom: 10),
+            backgroundColor: Colors.white,
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.remove_red_eye,
+                  color: Colors.black,
+                  size: 28,
+                ),
+                Text(
+                  ' View Balance',
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ],
+            ),
+            content: Container(
+                height: 120,
+                child: ViewBalance(
+                  user: widget.user,
+                )),
           ),
         ),
       ),
