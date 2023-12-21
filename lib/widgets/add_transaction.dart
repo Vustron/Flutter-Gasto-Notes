@@ -294,7 +294,7 @@ class _AddTransactionState extends State<AddTransaction> {
                           Navigator.push(
                               context,
                               PageTransition(
-                                type: PageTransitionType.bottomToTop,
+                                type: PageTransitionType.fade,
                                 child: const HomeScreen(),
                               ));
                         } catch (error) {
