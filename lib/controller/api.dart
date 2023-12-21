@@ -173,6 +173,7 @@ class API {
     }
   }
 
+  // for updating transactions
   static Future<void> updateTransaction(
     UserData appUser,
     Transactions transaction,
@@ -186,6 +187,11 @@ class API {
       'transaction_list/${getTransactionsID(appUser.id)}/transactions/',
     );
 
+    // Retrieve the old amount and type
+    double oldAmount = transaction.amount;
+    String oldType = transaction.type;
+
+    // Update the transaction details
     await transactionCollection.doc(transaction.sent).update({
       'title': title,
       'amount': amount,
@@ -194,25 +200,31 @@ class API {
       'type': type,
     });
 
-    if (transaction.type == 'Expense' || transaction.type == 'Income') {
-      double oldAmount = transaction.amount;
-      double newAmount = amount;
+    // Update user's balance based on the old and new types
+    double oldBalance = appUser.balance;
+    double newBalance = oldBalance;
 
-      double oldBalance = appUser.balance;
-      double newBalance = transaction.type == 'Expense'
-          ? oldBalance + oldAmount - newAmount
-          : oldBalance - oldAmount + newAmount;
-
-      await firestore.collection('users').doc(appUser.id).update({
-        'expenses': transaction.type == 'Expense'
-            ? appUser.expenses - oldAmount + newAmount
-            : appUser.expenses,
-        'income': transaction.type == 'Income'
-            ? appUser.income - oldAmount + newAmount
-            : appUser.income,
-        'balance': newBalance,
-      });
+    if (oldType == 'Expense' || oldType == 'Income') {
+      newBalance = oldType == 'Expense'
+          ? oldBalance + oldAmount
+          : oldBalance - oldAmount;
     }
+
+    if (type == 'Expense' || type == 'Income') {
+      newBalance =
+          type == 'Expense' ? newBalance - amount : newBalance + amount;
+    }
+
+    // Update user data
+    await firestore.collection('users').doc(appUser.id).update({
+      'expenses': type == 'Expense'
+          ? appUser.expenses + amount
+          : appUser.expenses - oldAmount,
+      'income': type == 'Income'
+          ? appUser.income + amount
+          : appUser.income - oldAmount,
+      'balance': newBalance,
+    });
   }
 
   // for deleting transactions

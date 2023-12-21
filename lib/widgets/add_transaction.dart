@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import '../controller/api.dart';
+import '../screens/home_screen.dart';
 import 'dialogs.dart';
 
 class AddTransaction extends StatefulWidget {
@@ -46,27 +48,29 @@ class _AddTransactionState extends State<AddTransaction> {
       child: Column(
         children: [
           // title
-          TextFormField(
-            maxLines: null,
-            controller: titleController,
-            onChanged: (value) => title = value,
-            validator: (value) => value!.isEmpty ? "Enter a title" : null,
-            style: const TextStyle(color: Colors.black),
-            decoration: InputDecoration(
-              labelText: 'Title',
-              hintText: 'e.g. Pamasahe',
-              hintStyle: const TextStyle(color: Colors.black38),
-              prefixIcon: const Icon(
-                BoxIcons.bx_comment_add,
-                color: Colors.black,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Colors.black),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Colors.black),
+          Expanded(
+            child: TextFormField(
+              maxLines: 1,
+              controller: titleController,
+              onChanged: (value) => title = value,
+              validator: (value) => value!.isEmpty ? "Enter a title" : null,
+              style: const TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                labelText: 'Title',
+                hintText: 'e.g. Pamasahe',
+                hintStyle: const TextStyle(color: Colors.black38),
+                prefixIcon: const Icon(
+                  BoxIcons.bx_comment_add,
+                  color: Colors.black,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
               ),
             ),
           ),
@@ -75,44 +79,57 @@ class _AddTransactionState extends State<AddTransaction> {
           const SizedBox(height: 20),
 
           // amount
-          TextFormField(
-            maxLines: null,
-            controller: amountController,
-            onChanged: (value) {
-              amount = double.tryParse(value) ?? 0.0;
-            },
-            validator: (value) => value!.isEmpty ? "Enter an amount" : null,
-            style: const TextStyle(color: Colors.black),
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-              signed: false,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
-              TextInputFormatter.withFunction((oldValue, newValue) {
-                final text = newValue.text;
-                return text.isEmpty
-                    ? newValue
-                    : double.tryParse(text) == null
-                        ? oldValue
-                        : newValue;
-              }),
-            ],
-            decoration: InputDecoration(
-              labelText: 'Amount',
-              hintText: 'e.g. ₱ 20.00',
-              hintStyle: const TextStyle(color: Colors.black38),
-              prefixIcon: const Icon(
-                Bootstrap.cash_stack,
-                color: Colors.black,
+          Expanded(
+            child: TextFormField(
+              maxLines: 1,
+              controller: amountController,
+              onChanged: (value) {
+                double parsedValue = double.tryParse(value) ?? 0.0;
+                if (parsedValue > 0 && parsedValue <= 1000000) {
+                  setState(() {
+                    amount = parsedValue;
+                  });
+                } else {
+                  setState(() {
+                    amountController.text = '';
+                  });
+                }
+              },
+              validator: (value) => value!.isEmpty ? "Enter an amount" : null,
+              style: const TextStyle(color: Colors.black),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+                signed: false,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Colors.black),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Colors.black),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+                LengthLimitingTextInputFormatter(
+                    10), // Limit the input to 10 characters
+                TextInputFormatter.withFunction((oldValue, newValue) {
+                  final text = newValue.text;
+                  return text.isEmpty
+                      ? newValue
+                      : double.tryParse(text) == null
+                          ? oldValue
+                          : newValue;
+                }),
+              ],
+              decoration: InputDecoration(
+                labelText: 'Amount',
+                hintText: 'e.g. ₱ 20.00',
+                hintStyle: const TextStyle(color: Colors.black38),
+                prefixIcon: const Icon(
+                  Bootstrap.cash_stack,
+                  color: Colors.black,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
               ),
             ),
           ),
@@ -274,6 +291,12 @@ class _AddTransactionState extends State<AddTransaction> {
                           Dialogs.showSuccessSnackbar(
                               context, 'Transaction added!');
                           Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.bottomToTop,
+                                child: const HomeScreen(),
+                              ));
                         } catch (error) {
                           print(error);
                           Dialogs.showErrorSnackbar(

@@ -1,6 +1,8 @@
 // ignore_for_file: sort_child_properties_last, avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import '../screens/home_screen.dart';
 import '../controller/api.dart';
 import '../model/transaction.dart';
 import '../model/user.dart';
@@ -41,6 +43,12 @@ class _DeleteTransactionState extends State<DeleteTransaction> {
                         Dialogs.showSuccessSnackbar(
                             context, 'Transaction deleted!');
                         Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.bottomToTop,
+                              child: const HomeScreen(),
+                            ));
                       } catch (error) {
                         print(error);
                         Dialogs.showErrorSnackbar(
