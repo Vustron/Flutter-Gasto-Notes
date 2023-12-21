@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import '../main.dart';
 import '../model/transaction.dart';
 import '../utils/icons_util.dart';
@@ -39,13 +40,43 @@ class _TransactionCardState extends State<TransactionCard> {
         ),
 
         // transaction amount
-        subtitle: Text(
-          DisplayUtil().getDisplayAmount(widget.transaction.amount),
-          maxLines: 1,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.white,
-          ),
+        subtitle: Row(
+          children: [
+            Text(
+              DisplayUtil().getDisplayAmount(widget.transaction.amount),
+              maxLines: 1,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+              ),
+            ),
+
+            // icons for income or expense
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: [
+                  widget.transaction.type == 'Income'
+                      ? const CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            BoxIcons.bx_arrow_to_top,
+                            color: Colors.green,
+                          ),
+                        )
+                      : const CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            BoxIcons.bx_arrow_to_bottom,
+                            color: Colors.red,
+                          ),
+                        ),
+                ],
+              ),
+            ),
+          ],
         ),
 
         // date

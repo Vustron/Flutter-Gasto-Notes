@@ -63,7 +63,7 @@ class _HomeScreen extends State<HomeScreen> {
           width: mq.height * .06,
           height: mq.height * .06,
           fit: BoxFit.fill,
-          imageUrl: user?.photoURL ?? '',
+          imageUrl: API.me.image,
           placeholder: (context, url) => CircularProgressIndicator(),
           errorWidget: (context, url, error) => CircleAvatar(
             child: Icon(Icons.person),
@@ -74,7 +74,7 @@ class _HomeScreen extends State<HomeScreen> {
 
     // init screens
     final screens = [
-      TransactionScreen(),
+      TransactionScreen(user: API.me),
       DashboardScreen(user: API.me),
       ProfileScreen(user: API.me),
     ];

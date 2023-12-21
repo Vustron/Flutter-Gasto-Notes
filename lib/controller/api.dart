@@ -173,7 +173,6 @@ class API {
     }
   }
 
-  // for updating transactions
   static Future<void> updateTransaction(
     UserData appUser,
     Transactions transaction,
@@ -183,9 +182,6 @@ class API {
     String category,
     String type,
   ) async {
-    // Transaction sending time (also used as id)
-    final time = DateTime.now().millisecondsSinceEpoch.toString();
-
     final transactionCollection = firestore.collection(
       'transaction_list/${getTransactionsID(appUser.id)}/transactions/',
     );
@@ -199,18 +195,21 @@ class API {
     });
 
     if (transaction.type == 'Expense' || transaction.type == 'Income') {
-      double newAmount = transaction.type == 'Expense'
-          ? appUser.expenses + amount
-          : appUser.income + amount;
+      double oldAmount = transaction.amount;
+      double newAmount = amount;
 
+      double oldBalance = appUser.balance;
       double newBalance = transaction.type == 'Expense'
-          ? appUser.balance - amount
-          : appUser.balance + amount;
+          ? oldBalance + oldAmount - newAmount
+          : oldBalance - oldAmount + newAmount;
 
       await firestore.collection('users').doc(appUser.id).update({
-        'expenses':
-            transaction.type == 'Expense' ? newAmount : appUser.expenses,
-        'income': transaction.type == 'Income' ? newAmount : appUser.income,
+        'expenses': transaction.type == 'Expense'
+            ? appUser.expenses - oldAmount + newAmount
+            : appUser.expenses,
+        'income': transaction.type == 'Income'
+            ? appUser.income - oldAmount + newAmount
+            : appUser.income,
         'balance': newBalance,
       });
     }
@@ -230,17 +229,20 @@ class API {
     await transactionCollection.doc(transaction.sent).delete();
 
     if (type == 'Expense' || type == 'Income') {
-      double newAmount = type == 'Expense'
-          ? appUser.expenses - amount
-          : appUser.income - amount;
+      double oldAmount = amount;
+
+      double newExpenses =
+          type == 'Expense' ? appUser.expenses - oldAmount : appUser.expenses;
+      double newIncome =
+          type == 'Income' ? appUser.income - oldAmount : appUser.income;
 
       double newBalance = type == 'Expense'
-          ? appUser.balance + amount
-          : appUser.balance - amount;
+          ? appUser.balance + oldAmount
+          : appUser.balance - oldAmount;
 
       await firestore.collection('users').doc(appUser.id).update({
-        'expenses': type == 'Expense' ? newAmount : appUser.expenses,
-        'income': type == 'Income' ? newAmount : appUser.income,
+        'expenses': newExpenses,
+        'income': newIncome,
         'balance': newBalance,
       });
     }

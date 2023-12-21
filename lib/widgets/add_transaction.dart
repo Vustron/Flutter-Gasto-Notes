@@ -270,6 +270,7 @@ class _AddTransactionState extends State<AddTransaction> {
                             dropdownValue,
                             currentOption,
                           );
+
                           Dialogs.showSuccessSnackbar(
                               context, 'Transaction added!');
                           Navigator.pop(context);
@@ -277,6 +278,7 @@ class _AddTransactionState extends State<AddTransaction> {
                           print(error);
                           Dialogs.showErrorSnackbar(
                               context, 'Transaction failed!');
+                          Navigator.pop(context);
                         }
                       }
                     },
