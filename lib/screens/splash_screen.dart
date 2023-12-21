@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
         // App Text
         Positioned(
-          bottom: mq.height * .28,
+          bottom: mq.height * .40,
           width: mq.width,
           // duration: const Duration(seconds: 1),
           child: Center(
@@ -98,24 +98,24 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   ],
                 ),
-                AnimatedTextKit(
-                  animatedTexts: [
-                    WavyAnimatedText(
-                      'Made by Vustron Vustronus',
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w900,
-                      ),
-                      speed: const Duration(milliseconds: 70),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                const SpinKitThreeInOut(
-                  color: Colors.grey,
-                  size: 50.0,
-                ),
+                // AnimatedTextKit(
+                //   animatedTexts: [
+                //     WavyAnimatedText(
+                //       'Made by Vustron Vustronus',
+                //       textStyle: const TextStyle(
+                //         color: Colors.black,
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.w900,
+                //       ),
+                //       speed: const Duration(milliseconds: 70),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 30),
+                // const SpinKitThreeInOut(
+                //   color: Colors.grey,
+                //   size: 50.0,
+                // ),
               ],
             ),
           ),

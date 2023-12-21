@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   AnimatedTextKit(
                     animatedTexts: [
                       WavyAnimatedText(
-                        'Made by Vustron Vustronus',
+                        'Simplify Spending, Amplify Savings',
                         textStyle: const TextStyle(
                           color: Colors.black,
                           fontSize: 14,
