@@ -46,7 +46,7 @@ class _DeleteTransactionState extends State<DeleteTransaction> {
                         Navigator.push(
                             context,
                             PageTransition(
-                              type: PageTransitionType.bottomToTop,
+                              type: PageTransitionType.fade,
                               child: const HomeScreen(),
                             ));
                       } catch (error) {
